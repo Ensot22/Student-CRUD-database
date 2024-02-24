@@ -62,14 +62,14 @@ while($row = mysqli_fetch_assoc($query))
 	$sub_array[] = $row['id'];
 	$sub_array[] = $row['name'];
 	$sub_array[] = $row['age'];
+	$sub_array[] = $row['birthdate'];
 	$sub_array[] = $row['gender'];
 	$sub_array[] = $row['email'];
 	$sub_array[] = $row['mobile'];
 	$sub_array[] = $row['address'];
-	$sub_array[] = $row['birthdate'];
 	$sub_array[] = $row['qualification'];
 	$sub_array[] = $row['employmentstatus'];
-	$sub_array[] = '<a href="javascript:void();" data-id="'.$row['id'].'"  class="btn btn-info btn-sm editbtn" >Edit</a> 
+	$sub_array[] = '<a href="javascript:void();" data-id="'.$row['id'].'"  class="btn btn-info btn-sm editbtn" >Edit</a>
 	 <a href="javascript:void();" data-id="'.$row['id'].'"  class="btn btn-danger btn-sm deleteBtn" >Delete</a>';
 	$users[] = $sub_array;
 }
@@ -80,5 +80,6 @@ $output = array(
 	'data'=>$users,
 );
 
-echo json_encode($output);
+$users_json_data = json_encode($output);
+echo $users_json_data;
 ?>

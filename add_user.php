@@ -1,4 +1,4 @@
-<?php 
+<?php
 include('connection.php');
 $username = $_POST['uname'];
 $age = $_POST['age'];
@@ -18,22 +18,18 @@ $query= mysqli_query($connection_user_db,$sql);
 $lastId = mysqli_insert_id($connection_user_db);
 if($query ==true)
 {
-   
     $users = array(
         'status'=>'true',
-       
     );
 
     echo json_encode($users);
 }
 else
 {
-     $users = array(
+    $users = array(
         'status'=>'false',
-      
     );
 
     echo json_encode($users);
-} 
-
+}
 ?>

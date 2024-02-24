@@ -1,9 +1,5 @@
 <?php
 include('connection.php');
-// include('queries/get_users.php');
-
-include ('fetch_data.php');
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -77,8 +73,8 @@ include ('fetch_data.php');
       const usersDataTable = $('#js-users-data-table');
 
       usersDataTable.DataTable({
-        "fnCreatedRow": function (nRow, aData, iDataIndex) {
-          $(nRow).attr('id', aData[0]);
+        "fnCreatedRow": function (row, data, dataIndex, cell) {
+          $(row).attr('id', data[0]);
         },
         'serverSide': 'true',
         'processing': 'true',
@@ -97,20 +93,18 @@ include ('fetch_data.php');
       });
     });
 
-    // Add User Action
-    $(document).on('submit', '#addUser', function (e) {
-      e.preventDefault();
-
+    function onAddUserFormSubmit() {
       var name = $('#addNameField').val();
       var age = $('#addAgeField').val();
-      var gender = $('#addGenderField').val();
-      var birthdate = $('#addBirthdateField').val();
+      var gender = $("input[name='addGenderField']:checked").val();
+      var birthDate = $('#addBirthDateField').val();
       var email = $('#addEmailField').val();
       var mobile = $('#addMobileField').val();
-      var Address = $('#addAddressField').val();
+      var address = $('#addAddressField').val();
       var qualification = $('#addQualificationField').val();
-      var employmentstatus = $('#addEmploymentstatusField').val();
-      if (Address != '' && name != '' && age != '' && gender != '' && birthdate != '' && email != '' && mobile != '' && address != '' && qualification != '' && employmentstatus != '') {
+      var employmentStatus = $('#addEmploymentStatusField').val();
+
+      if (address != '' && name != '' && age != '' && gender != '' && birthdate != '' && email != '' && mobile != '' && address != '' && qualification != '' && employmentStatus != '') {
         $.ajax({
           url: "add_user.php",
           type: "post",
@@ -124,7 +118,7 @@ include ('fetch_data.php');
             birthdate: birthdate,
             address: address,
             qualification: qualification,
-            employmentstatus: employmentstatus
+            employmentstatus: employmentStatus,
           },
           success: function (data) {
             var json = JSON.parse(data);
@@ -141,7 +135,53 @@ include ('fetch_data.php');
       } else {
         alert('Fill all the required fields');
       }
-    });
+    }
+
+    // Add User Action
+    // $('#addUserForm').on('submit', function (e) {
+    //   e.preventDefault();
+
+    //   var name = $('#addNameField').val();
+    //   var age = $('#addAgeField').val();
+    //   var gender = $('#addGenderField').val();
+    //   var birthdate = $('#addBirthdateField').val();
+    //   var email = $('#addEmailField').val();
+    //   var mobile = $('#addMobileField').val();
+    //   var Address = $('#addAddressField').val();
+    //   var qualification = $('#addQualificationField').val();
+    //   var employmentstatus = $('#addEmploymentstatusField').val();
+    //   if (Address != '' && name != '' && age != '' && gender != '' && birthdate != '' && email != '' && mobile != '' && address != '' && qualification != '' && employmentstatus != '') {
+    //     $.ajax({
+    //       url: "add_user.php",
+    //       type: "post",
+    //       data: {
+    //         id: id,
+    //         name: name,
+    //         age: age,
+    //         email: email,
+    //         gender: gender,
+    //         mobile: mobile,
+    //         birthdate: birthdate,
+    //         address: address,
+    //         qualification: qualification,
+    //         employmentstatus: employmentstatus
+    //       },
+    //       success: function (data) {
+    //         var json = JSON.parse(data);
+    //         var status = json.status;
+    //         if (status == 'true') {
+    //           mytable = $('#js-users-data-table').DataTable();
+    //           mytable.draw();
+    //           $('#addUserModal').modal('hide');
+    //         } else {
+    //           alert('failed');
+    //         }
+    //       }
+    //     });
+    //   } else {
+    //     alert('Fill all the required fields');
+    //   }
+    // });
 
     // Update User Action
     $(document).on('submit', '#updateUser', function (e) {
@@ -149,7 +189,7 @@ include ('fetch_data.php');
       var name = $('#addNameField').val();
       var age = $('#addAgeField').val();
       var gender = $('#addGenderField').val();
-      var birthdate = $('#addBirthdateField').val();
+      var birthdate = $('#addBirthDateField').val();
       var email = $('#addEmailField').val();
       var mobile = $('#addMobileField').val();
       var address = $('#addAddressField').val();
@@ -357,48 +397,48 @@ include ('fetch_data.php');
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="addUser" action="">
+          <form id="addUserForm">
             <div class="mb-3 row">
-              <label for="addnameField" class="col-md-3 form-label">Name</label>
+              <label for="addNameField" class="col-md-3 form-label">Name</label>
               <div class="col-md-9">
-                <input type="text" class="form-control" id="addnameField" name="name">
+                <input type="text" class="form-control" id="addNameField" name="name">
               </div>
             </div>
             <div class="mb-3 row">
-              <label for="ageField" class="col-md-3 form-label">Age</label>
+              <label for="addAgeField" class="col-md-3 form-label">Age</label>
               <div class="col-md-9">
-                <input type="number" class="form-control" id="ageField" name="age">
+                <input type="number" class="form-control" id="addAgeField" name="age">
               </div>
             </div>
             <div class="mb-3 row">
-              <label for="genderField" class="col-md-3 form-label">Gender</label>
+              <label for="addGenderField" class="col-md-3 form-label">Gender</label>
               <div class="col-md-9">
-                <input type="radio" name="gender" value="Male">Male
-                <input type="radio" name="gender" value="Female">Female
+                <input type="radio" name="addGenderField" value="Male">Male
+                <input type="radio" name="addGenderField" value="Female">Female
               </div>
             </div>
             <div class="mb-3 row">
-              <label for="emailField" class="col-md-3 form-label">Email</label>
+              <label for="addEmailField" class="col-md-3 form-label">Email</label>
               <div class="col-md-9">
                 <input type="email" class="form-control" id="addEmailField" name="email">
               </div>
             </div>
             <div class="mb-3 row">
-              <label for="mobileField" class="col-md-3 form-label">Mobile</label>
+              <label for="addMobileField" class="col-md-3 form-label">Mobile</label>
               <div class="col-md-9">
-                <input type="text" class="form-control" id="addmobileField" name="mobile">
+                <input type="text" class="form-control" id="addMobileField" name="mobile">
               </div>
             </div>
             <div class="mb-3 row">
-              <label for="addressField" class="col-md-3 form-label">Address</label>
+              <label for="addAddressField" class="col-md-3 form-label">Address</label>
               <div class="col-md-9">
-                <input type="text" class="form-control" id="addaddressField" name="Address">
+                <input type="text" class="form-control" id="addAddressField" name="Address">
               </div>
             </div>
             <div class="mb-3 row">
               <label for="qualificationField" class="col-md-3 form-label">Qualification</label>
               <div class="col-md-9">
-                <input list="addqualificationField" name="qualification">
+                <input list="addQualificationField" name="qualification" onclick="showDatalist()">
                 <form action="add_user.php">
                   <datalist id="addQualificationField">
                     <option value="Book Keeping-NCIII">
@@ -412,6 +452,11 @@ include ('fetch_data.php');
                   </datalist>
                 </form>
               </div>
+              <script>
+                function showDatalist() {
+                  document.getElementById("addQualificationField").style.display = "block";
+                }
+              </script>
             </div>
             <div class="mb-3 row">
               <label for="employmentstatusField" class="col-md-3 form-label">EmploymentStatus</label>
@@ -422,7 +467,7 @@ include ('fetch_data.php');
               </div>
             </div>
             <div class="text-center">
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" onclick="onAddUserFormSubmit()" class="btn btn-primary">Submit</button>
             </div>
           </form>
         </div>
