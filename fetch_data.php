@@ -41,19 +41,21 @@ if(isset($_POST['order']))
 }
 else
 {
-	$sql .= " ORDER BY id desc";
+	$sql .= " ORDER BY id asc";
 }
 
-if($_POST['length'] != -1)
-{
-	$start = $_POST['start'];
-	$length = $_POST['length'];
-	$sql .= " LIMIT  ".$start.", ".$length;
-}	
+// TODO: Pagination Params
+// if($_POST['length'] != -1)
+// {
+// 	$start = $_POST['start'];
+// 	$length = $_POST['length'];
+// 	$sql .= " LIMIT  ".$start.", ".$length;
+// }
 
 $query = mysqli_query($connection_user_db,$sql);
 $count_rows = mysqli_num_rows($query);
-$data = array();
+$users = array();
+
 while($row = mysqli_fetch_assoc($query))
 {
 	$sub_array = array();
@@ -63,21 +65,20 @@ while($row = mysqli_fetch_assoc($query))
 	$sub_array[] = $row['gender'];
 	$sub_array[] = $row['email'];
 	$sub_array[] = $row['mobile'];
-	$sub_array[] = $row['address'];	
+	$sub_array[] = $row['address'];
 	$sub_array[] = $row['birthdate'];
-	$sub_array[] = $row['qualificaiton'];	
-	$sub_array[] = $row['employmentstatus'];	
+	$sub_array[] = $row['qualification'];
+	$sub_array[] = $row['employmentstatus'];
 	$sub_array[] = '<a href="javascript:void();" data-id="'.$row['id'].'"  class="btn btn-info btn-sm editbtn" >Edit</a> 
 	 <a href="javascript:void();" data-id="'.$row['id'].'"  class="btn btn-danger btn-sm deleteBtn" >Delete</a>';
-	$data[] = $sub_array;
+	$users[] = $sub_array;
 }
 
 $output = array(
-	'draw'=>intval($_POST['draw']),
-	'recordsTotal'=>$count_rows ,
+	'recordsTotal'=>$count_rows,
 	'recordsFiltered'=>$total_all_rows,
-	'data'=>$data,
+	'data'=>$users,
 );
-echo  json_encode($output);
 
+echo json_encode($output);
 ?>

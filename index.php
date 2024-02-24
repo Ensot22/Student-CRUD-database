@@ -1,22 +1,9 @@
-<?php include('connection.php');
-// Fetch data from the database
-$sql_query = 'SELECT * FROM users';
+<?php
+include('connection.php');
+// include('queries/get_users.php');
 
-// Execute the query
-$result = mysqli_query($connection_user_db, $sql_query);
+include ('fetch_data.php');
 
-// Check if there are any results
-if (mysqli_num_rows($result) > 0) {
-  // Output data of each row
-  while ($row = mysqli_fetch_assoc($result)) {
-    echo "id: " . $row["id"] . " - Name: " . $row["name"] . "<br>";
-  }
-} else {
-  echo "0 results";
-}
-
-// Close the connection
-mysqli_close($connection_user_db);
 ?>
 <!doctype html>
 <html lang="en">
@@ -49,7 +36,7 @@ mysqli_close($connection_user_db);
     <div class="row">
       <div class="container">
         <div class="btnAdd">
-          <a href="#!" data-id="" data-bs-toggle="model" data-bs-target="#addUserModel"
+          <a href="#!" data-id="" data-bs-toggle="modal" data-bs-target="#addUserModal"
             class="btn btn-success btn-sm">Add User</a>
         </div>
         <div class="row">
@@ -67,7 +54,7 @@ mysqli_close($connection_user_db);
                 <th>Address</th>
                 <th>Qualification</th>
                 <th>EmploymentStatus</th>
-                <!-- <th>Options</th> -->
+                <th>Options</th>
               </thead>
               <tbody>
               </tbody>
@@ -87,11 +74,13 @@ mysqli_close($connection_user_db);
     $(document).ready(function () {
       // fetch data from database
 
-      $('#js-users-data-table').DataTable({
+      const usersDataTable = $('#js-users-data-table');
+
+      usersDataTable.DataTable({
         "fnCreatedRow": function (nRow, aData, iDataIndex) {
           $(nRow).attr('id', aData[0]);
         },
-        //'serverSide': 'true',
+        'serverSide': 'true',
         'processing': 'true',
         'paging': 'true',
         'order': [],
@@ -107,6 +96,8 @@ mysqli_close($connection_user_db);
         ]
       });
     });
+
+    // Add User Action
     $(document).on('submit', '#addUser', function (e) {
       e.preventDefault();
 
@@ -141,7 +132,7 @@ mysqli_close($connection_user_db);
             if (status == 'true') {
               mytable = $('#js-users-data-table').DataTable();
               mytable.draw();
-              $('#addUserModel').model('hide');
+              $('#addUserModal').modal('hide');
             } else {
               alert('failed');
             }
@@ -151,6 +142,8 @@ mysqli_close($connection_user_db);
         alert('Fill all the required fields');
       }
     });
+
+    // Update User Action
     $(document).on('submit', '#updateUser', function (e) {
       e.preventDefault();
       var name = $('#addNameField').val();
@@ -188,7 +181,7 @@ mysqli_close($connection_user_db);
               var button = '<td><a href="javascript:void();" data-id="' + id + '" class="btn btn-info btn-sm editbtn">Edit</a>  <a href="#!"  data-id="' + id + '"  class="btn btn-danger btn-sm deleteBtn">Delete</a></td>';
               var row = table.row("[id='" + trid + "']");
               row.row("[id='" + trid + "']").data([id, name, birthdate, age, gender, email, mobile, address, qualification, employmentstatus, button]);
-              $('#js-user-model').model('hide');
+              $('#js-user-modal').modal('hide');
             } else {
               alert('failed');
             }
@@ -198,12 +191,14 @@ mysqli_close($connection_user_db);
         alert('Fill all the required fields');
       }
     });
+
+    // Edit User Action
     $('#js-users-data-table').on('click', '.editbtn ', function (event) {
       var table = $('#js-users-data-table').DataTable();
       var trid = $(this).closest('tr').attr('id');
 
       var id = $(this).data('id');
-      $('#js-user-model').model('show');
+      $('#js-user-modal').modal('show');
 
       $.ajax({
         url: "get_single_data.php",
@@ -236,6 +231,7 @@ mysqli_close($connection_user_db);
       })
     });
 
+    // Delete User Action
     $(document).on('click', '.deleteBtn', function (event) {
       var table = $('#js-users-data-table').DataTable();
       event.preventDefault();
@@ -261,21 +257,18 @@ mysqli_close($connection_user_db);
       } else {
         return null;
       }
-
-
-
-    })
+    });
   </script>
 
-  <!-- Model -->
-  <div class="model fade" id="js-user-model" tabindex="-1" aria-labelledby="js-user-model-label" aria-hidden="true">
-    <div class="model-dialog">
-      <div class="model-content">
-        <div class="model-header">
-          <h5 class="model-title" id="js-user-model-label">Update User</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="model" aria-label="Close"></button>
+  <!-- Modal -->
+  <div class="modal fade" id="js-user-modal" tabindex="-1" aria-labelledby="js-user-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="js-user-modal-label">Update User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="model-body">
+        <div class="modal-body">
           <form id="updateUser">
             <input type="hidden" name="id" id="id" value="">
             <input type="hidden" name="trid" id="trid" value="">
@@ -347,23 +340,23 @@ mysqli_close($connection_user_db);
             </div>
           </form>
         </div>
-        <div class="model-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="model">Close</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
   </div>
 
 
-  <!-- Add user Model -->
-  <div class="model fade" id="addUserModel" tabindex="-1" aria-labelledby="js-user-model-label" aria-hidden="true">
-    <div class="model-dialog">
-      <div class="model-content">
-        <div class="model-header">
-          <h5 class="model-title" id="js-user-model-label">Add User</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="model" aria-label="Close"></button>
+  <!-- Add user modal -->
+  <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="js-user-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="js-user-modal-label">Add User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="model-body">
+        <div class="modal-body">
           <form id="addUser" action="">
             <div class="mb-3 row">
               <label for="addnameField" class="col-md-3 form-label">Name</label>
@@ -433,8 +426,8 @@ mysqli_close($connection_user_db);
             </div>
           </form>
         </div>
-        <div class="model-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="model">Close</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
