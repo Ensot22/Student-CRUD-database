@@ -1,4 +1,4 @@
-<?php 
+<?php
 include('connection.php');
 $username = $_POST['uname'];
 $age = $_POST['age'];
@@ -14,26 +14,22 @@ $id = $_POST['id'];
 $sql = "UPDATE `users` SET  `name`='$name' , `age`= '$age', `birthdate`= '$birthdate',`gender`= '$gender', 
 `email`= '$email', `mobile`='$mobile',  `address`='$address', `qualification`='$qualification', `employmentstatus`='$employmentstatus'
  WHERE id='$id' ";
-$query= mysqli_query($con,$sql);
-$lastId = mysqli_insert_id($con);
+$query= mysqli_query($connection_user_db,$sql);
+$lastId = mysqli_insert_id($connection_user_db);
 if($query ==true)
 {
-   
-    $data = array(
+    $users = array(
         'status'=>'true',
-       
     );
 
-    echo json_encode($data);
+    echo json_encode($users);
 }
 else
 {
-     $data = array(
+    $users = array(
         'status'=>'false',
-      
     );
 
-    echo json_encode($data);
-} 
-
+    echo json_encode($users);
+}
 ?>
