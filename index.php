@@ -1,4 +1,23 @@
-<?php include('connection.php'); ?>
+<?php include('connection.php');
+// Fetch data from the database
+$sql_query = 'SELECT * FROM users';
+
+// Execute the query
+$result = mysqli_query($connection_user_db, $sql_query);
+
+// Check if there are any results
+if (mysqli_num_rows($result) > 0) {
+  // Output data of each row
+  while ($row = mysqli_fetch_assoc($result)) {
+    echo "id: " . $row["id"] . " - Name: " . $row["name"] . "<br>";
+  }
+} else {
+  echo "0 results";
+}
+
+// Close the connection
+mysqli_close($connection_user_db);
+?>
 <!doctype html>
 <html lang="en">
 
@@ -11,9 +30,7 @@
 
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap5.0.1.min.css" rel="stylesheet" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="css/datatables-1.10.25.min.css" /> 
-  
-
+  <link rel="stylesheet" type="text/css" href="css/datatables-1.10.25.min.css" />
 
   <title>MDC TechVOC Database</title>
   <style type="text/css">
@@ -32,12 +49,13 @@
     <div class="row">
       <div class="container">
         <div class="btnAdd">
-          <a href="#!" data-id="" data-bs-toggle="model" data-bs-target="#addUserModel" class="btn btn-success btn-sm">Add User</a>
+          <a href="#!" data-id="" data-bs-toggle="model" data-bs-target="#addUserModel"
+            class="btn btn-success btn-sm">Add User</a>
         </div>
         <div class="row">
           <div class="col-md-1"></div>
           <div class="col-md-10">
-            <table id="example" class="table">
+            <table id="js-users-data-table" class="table">
               <thead>
                 <th>Id</th>
                 <th>Name</th>
@@ -49,7 +67,7 @@
                 <th>Address</th>
                 <th>Qualification</th>
                 <th>EmploymentStatus</th>
-                <th>Options</th>
+                <!-- <th>Options</th> -->
               </thead>
               <tbody>
               </tbody>
@@ -61,17 +79,16 @@
     </div>
   </div>
 
-  
   <script src="js/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
   <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script type="text/javascript" src="js/dt-1.10.25datatables.min.js"></script>
-  
-  
 
- <script type="text/javascript">
-    $(document).ready(function() {
-      $('#example').DataTable({
-        "fnCreatedRow": function(nRow, aData, iDataIndex) {
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // fetch data from database
+
+      $('#js-users-data-table').DataTable({
+        "fnCreatedRow": function (nRow, aData, iDataIndex) {
           $(nRow).attr('id', aData[0]);
         },
         //'serverSide': 'true',
@@ -79,21 +96,21 @@
         'paging': 'true',
         'order': [],
         'ajax': {
-        'url': 'fetch_data.php',
-        'type': 'post',
+          'url': 'fetch_data.php',
+          'type': 'post',
         },
         "aoColumnDefs": [{
-        "bSortable": false,
-        "aTargets": [5]
-          },
+          "bSortable": false,
+          "aTargets": [5]
+        },
 
         ]
       });
     });
-    $(document).on('submit', '#addUser', function(e) {
+    $(document).on('submit', '#addUser', function (e) {
       e.preventDefault();
-      
-      var name = $('#addNameField').val();  
+
+      var name = $('#addNameField').val();
       var age = $('#addAgeField').val();
       var gender = $('#addGenderField').val();
       var birthdate = $('#addBirthdateField').val();
@@ -102,27 +119,27 @@
       var Address = $('#addAddressField').val();
       var qualification = $('#addQualificationField').val();
       var employmentstatus = $('#addEmploymentstatusField').val();
-      if (Address != '' && name != '' && age != '' && gender != '' &&birthdate != '' && email != '' && mobile !=  '' && address != '' && qualification != '' && employmentstatus != '') {
+      if (Address != '' && name != '' && age != '' && gender != '' && birthdate != '' && email != '' && mobile != '' && address != '' && qualification != '' && employmentstatus != '') {
         $.ajax({
           url: "add_user.php",
           type: "post",
           data: {
-            id:id,
-            name:name,
-            age:age,
+            id: id,
+            name: name,
+            age: age,
             email: email,
-            gender:gender,
+            gender: gender,
             mobile: mobile,
-            birthdate:birthdate,
+            birthdate: birthdate,
             address: address,
-            qualification:qualification,
-            employmentstatus:employmentstatus
+            qualification: qualification,
+            employmentstatus: employmentstatus
           },
-          success: function(data) {
+          success: function (data) {
             var json = JSON.parse(data);
             var status = json.status;
             if (status == 'true') {
-              mytable = $('#example').DataTable();
+              mytable = $('#js-users-data-table').DataTable();
               mytable.draw();
               $('#addUserModel').model('hide');
             } else {
@@ -134,7 +151,7 @@
         alert('Fill all the required fields');
       }
     });
-    $(document).on('submit', '#updateUser', function(e) {
+    $(document).on('submit', '#updateUser', function (e) {
       e.preventDefault();
       var name = $('#addNameField').val();
       var age = $('#addAgeField').val();
@@ -147,31 +164,31 @@
       var employmentstatus = $('#addEmploymentstatusField').val();
       var trid = $('#trid').val();
       var id = $('#id').val();
-      if (Address != '' && name != '' && age != '' && gender != '' && birthdate != '' && email != '' && mobile !=  '' && address != '' && qualification != '' && employmentstatus != '') {
+      if (Address != '' && name != '' && age != '' && gender != '' && birthdate != '' && email != '' && mobile != '' && address != '' && qualification != '' && employmentstatus != '') {
         $.ajax({
           url: "update_user.php",
           type: "post",
           data: {
-            id:id,
-            name:name,
-            age:age,
+            id: id,
+            name: name,
+            age: age,
             email: email,
-            gender:gender,
+            gender: gender,
             mobile: mobile,
-            birthdate:birthdate,
+            birthdate: birthdate,
             address: address,
-            qualification:qualification,
-            employmentstatus:employmentstatus
+            qualification: qualification,
+            employmentstatus: employmentstatus
           },
-          success: function(data) {
+          success: function (data) {
             var json = JSON.parse(data);
             var status = json.status;
             if (status == 'true') {
-              table = $('#example').DataTable();
+              table = $('#js-users-data-table').DataTable();
               var button = '<td><a href="javascript:void();" data-id="' + id + '" class="btn btn-info btn-sm editbtn">Edit</a>  <a href="#!"  data-id="' + id + '"  class="btn btn-danger btn-sm deleteBtn">Delete</a></td>';
               var row = table.row("[id='" + trid + "']");
               row.row("[id='" + trid + "']").data([id, name, birthdate, age, gender, email, mobile, address, qualification, employmentstatus, button]);
-              $('#exampleModel').model('hide');
+              $('#js-user-model').model('hide');
             } else {
               alert('failed');
             }
@@ -181,29 +198,29 @@
         alert('Fill all the required fields');
       }
     });
-    $('#example').on('click', '.editbtn ', function(event) {
-      var table = $('#example').DataTable();
+    $('#js-users-data-table').on('click', '.editbtn ', function (event) {
+      var table = $('#js-users-data-table').DataTable();
       var trid = $(this).closest('tr').attr('id');
-      console.log(selectedRow);
+
       var id = $(this).data('id');
-      $('#exampleModel').model('show');
+      $('#js-user-model').model('show');
 
       $.ajax({
         url: "get_single_data.php",
         data: {
-            id:id,
-            name:name,
-            age:age,
-            email: email,
-            gender:gender,
-            mobile: mobile,
-            birthdate:birthdate,
-            address: address,
-            qualification:qualification,
-            employmentstatus:employmentstatus
+          id: id,
+          name: name,
+          age: age,
+          email: email,
+          gender: gender,
+          mobile: mobile,
+          birthdate: birthdate,
+          address: address,
+          qualification: qualification,
+          employmentstatus: employmentstatus
         },
         type: 'post',
-        success: function(data) {
+        success: function (data) {
           var json = JSON.parse(data);
           $('#id').val(id);
           $('#nameField').val(json.name);
@@ -219,8 +236,8 @@
       })
     });
 
-    $(document).on('click', '.deleteBtn', function(event) {
-      var table = $('#example').DataTable();
+    $(document).on('click', '.deleteBtn', function (event) {
+      var table = $('#js-users-data-table').DataTable();
       event.preventDefault();
       var id = $(this).data('id');
       if (confirm("Are you sure want to delete this User ? ")) {
@@ -230,7 +247,7 @@
             id: id
           },
           type: "post",
-          success: function(data) {
+          success: function (data) {
             var json = JSON.parse(data);
             status = json.status;
             if (status == 'success') {
@@ -251,11 +268,11 @@
   </script>
 
   <!-- Model -->
-  <div class="model fade" id="exampleModel" tabindex="-1" aria-labelledby="exampleModelLabel" aria-hidden="true">
+  <div class="model fade" id="js-user-model" tabindex="-1" aria-labelledby="js-user-model-label" aria-hidden="true">
     <div class="model-dialog">
       <div class="model-content">
         <div class="model-header">
-          <h5 class="model-title" id="exampleModelLabel">Update User</h5>
+          <h5 class="model-title" id="js-user-model-label">Update User</h5>
           <button type="button" class="btn-close" data-bs-dismiss="model" aria-label="Close"></button>
         </div>
         <div class="model-body">
@@ -302,19 +319,19 @@
             <div class="mb-3 row">
               <label for="qualificationField" class="col-md-3 form-label">Qualification</label>
               <div class="col-md-9">
-                 <input list="addqualificationField" name="qualification">
-                 <form action="update_user.php">
-                              <datalist id="addQualificationField">
-                                <option value="Book Keeping-NCIII">
-                                <option value="Bread & Pastry Production-NCII">
-                                <option value="Career Entry Course for Software Dev.JAVA-NCIV">
-                                <option value="Computer System Servicing-NCII">
-                                <option value="Computer System Servicing-NCII(Mobile Training Prog.)">
-                                <option value="Contact Center Servicing-NCII">
-                                <option value="Events Management Services-NCIII">
-                                <option value="Trainer's Methodology Level1">
-                              </datalist>
-                            </form>
+                <input list="addqualificationField" name="qualification">
+                <form action="update_user.php">
+                  <datalist id="addQualificationField">
+                    <option value="Book Keeping-NCIII">
+                    <option value="Bread & Pastry Production-NCII">
+                    <option value="Career Entry Course for Software Dev.JAVA-NCIV">
+                    <option value="Computer System Servicing-NCII">
+                    <option value="Computer System Servicing-NCII(Mobile Training Prog.)">
+                    <option value="Contact Center Servicing-NCII">
+                    <option value="Events Management Services-NCIII">
+                    <option value="Trainer's Methodology Level1">
+                  </datalist>
+                </form>
               </div>
             </div>
             <div class="mb-3 row">
@@ -339,11 +356,11 @@
 
 
   <!-- Add user Model -->
-  <div class="model fade" id="addUserModel" tabindex="-1" aria-labelledby="exampleModelLabel" aria-hidden="true">
+  <div class="model fade" id="addUserModel" tabindex="-1" aria-labelledby="js-user-model-label" aria-hidden="true">
     <div class="model-dialog">
       <div class="model-content">
         <div class="model-header">
-          <h5 class="model-title" id="exampleModelLabel">Add User</h5>
+          <h5 class="model-title" id="js-user-model-label">Add User</h5>
           <button type="button" class="btn-close" data-bs-dismiss="model" aria-label="Close"></button>
         </div>
         <div class="model-body">
@@ -388,19 +405,19 @@
             <div class="mb-3 row">
               <label for="qualificationField" class="col-md-3 form-label">Qualification</label>
               <div class="col-md-9">
-                 <input list="addqualificationField" name="qualification">
-                 <form action="add_user.php">
-                              <datalist id="addQualificationField">
-                                <option value="Book Keeping-NCIII">
-                                <option value="Bread & Pastry Production-NCII">
-                                <option value="Career Entry Course for Software Dev.JAVA-NCIV">
-                                <option value="Computer System Servicing-NCII">
-                                <option value="Computer System Servicing-NCII(Mobile Training Prog.)">
-                                <option value="Contact Center Servicing-NCII">
-                                <option value="Events Management Services-NCIII">
-                                <option value="Trainer's Methodology Level1">
-                              </datalist>
-                            </form>
+                <input list="addqualificationField" name="qualification">
+                <form action="add_user.php">
+                  <datalist id="addQualificationField">
+                    <option value="Book Keeping-NCIII">
+                    <option value="Bread & Pastry Production-NCII">
+                    <option value="Career Entry Course for Software Dev.JAVA-NCIV">
+                    <option value="Computer System Servicing-NCII">
+                    <option value="Computer System Servicing-NCII(Mobile Training Prog.)">
+                    <option value="Contact Center Servicing-NCII">
+                    <option value="Events Management Services-NCIII">
+                    <option value="Trainer's Methodology Level1">
+                  </datalist>
+                </form>
               </div>
             </div>
             <div class="mb-3 row">
@@ -429,7 +446,7 @@
 
 <script type="text/javascript">
 
-  //var table = $('#example').DataTable();
-  
+  //var table = $('#js-users-data-table').DataTable();
 
-</script> 
+
+</script>

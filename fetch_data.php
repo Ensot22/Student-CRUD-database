@@ -3,7 +3,7 @@
 $output= array();
 $sql = " SELECT * FROM users ";
 
-$totalQuery = mysqli_query($con,$sql);
+$totalQuery = mysqli_query($connection_user_db,$sql);
 $total_all_rows = mysqli_num_rows($totalQuery);
 
 $columns = array(
@@ -51,7 +51,7 @@ if($_POST['length'] != -1)
 	$sql .= " LIMIT  ".$start.", ".$length;
 }	
 
-$query = mysqli_query($con,$sql);
+$query = mysqli_query($connection_user_db,$sql);
 $count_rows = mysqli_num_rows($query);
 $data = array();
 while($row = mysqli_fetch_assoc($query))

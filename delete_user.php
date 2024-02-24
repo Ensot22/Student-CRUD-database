@@ -3,7 +3,7 @@ include('connection.php');
 
 $user_id = $_POST['id'];
 $sql = "DELETE FROM users WHERE id='$user_id'";
-$delQuery =mysqli_query($con,$sql);
+$delQuery =mysqli_query($connection_user_db,$sql);
 if($delQuery==true)
 {
 	 $data = array(
