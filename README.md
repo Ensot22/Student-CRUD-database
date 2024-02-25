@@ -1,3 +1,5 @@
+# Setting up the project
+
 1. First, make sure you have Xampp installed on your machine. If not, download and install it.
 2. Create a folder inside the `htdocs` directory of your Xampp installation. You can name it whatever you like.
 3. Clone this repository into the folder you created, replacing the name of the directory with the one you chose in the previous step.
@@ -8,7 +10,8 @@
 8. By default, the username is `root` and the password field should be left empty.
 9. Once you have completed the above steps, you can run the Apache Server and MySQL server in Xampp and navigate to `localhost/your-folder-name` in your browser to view the website.
 
-# []: # (License)
+## License
+
 The MIT License (MIT)
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
