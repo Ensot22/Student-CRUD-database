@@ -1,4 +1,5 @@
-<?php include('connection.php');
+<?php
+include('connection.php');
 
 $output= array();
 $sql = " SELECT * FROM users ";

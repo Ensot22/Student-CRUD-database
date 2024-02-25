@@ -1,33 +1,25 @@
 <?php
 include('connection.php');
-$username = $_POST['uname'];
-$age = $_POST['age'];
-$birthdate = $_POST['birthdate'];
-$gender = $_POST['gender'];
-$email = $_POST['email'];
-$mobile = $_POST['mobile'];
-$address = $_POST['address'];
-$qualification = $_POST['qualification'];
-$employmentstatus = $_POST['employmentstatus'];
-$id = $_POST['id'];
+include('classes/User.php');
 
-$sql = "UPDATE `users` SET  `name`='$name' , `age`= '$age', `birthdate`= '$birthdate',`gender`= '$gender', 
-`email`= '$email', `mobile`='$mobile',  `address`='$address', `qualification`='$qualification', `employmentstatus`='$employmentstatus'
- WHERE id='$id' ";
-$query= mysqli_query($connection_user_db,$sql);
+$user = new User($_POST);
+
+$sql = "INSERT INTO `users` (`name`, `age`, `birthdate`, `gender`, `email`, `mobile`, `address`, `qualification`, `employmentstatus`)
+    VALUES ('$user->name', '$user->age', '$user->birth_date', '$user->gender', '$user->email', '$user->mobile', '$user->address', '$user->qualification', '$user->employment_status');
+";
+
+$query = mysqli_query($connection_user_db, $sql);
 $lastId = mysqli_insert_id($connection_user_db);
-if($query ==true)
-{
+
+if ($query == true) {
     $users = array(
-        'status'=>'true',
+        'status' => 'true',
     );
 
     echo json_encode($users);
-}
-else
-{
+} else {
     $users = array(
-        'status'=>'false',
+        'status' => 'false',
     );
 
     echo json_encode($users);
